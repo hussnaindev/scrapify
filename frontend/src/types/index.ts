@@ -96,7 +96,7 @@ export interface ErrorState {
 // Component prop types
 export interface ScrapingCardProps {
     source: ScrapingSource;
-    onScrape: (source: ScrapingSource, format: string) => void;
+    onScrape: (source: ScrapingSource, format: string, limit?: number) => void | Promise<void>;
     isLoading?: boolean;
 }
 

@@ -5,7 +5,7 @@
 
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { ScrapingRequest, ScrapingSource } from '../types';
+import { GitHubMostStarredApiResponse, ScrapingRequest, ScrapingSource, TuringJob } from '../types';
 
 class ScrapingService {
     private scrapingSources: ScrapingSource[] = [
@@ -20,16 +20,6 @@ class ScrapingService {
             estimatedRecords: 150
         },
         {
-            id: 'amazon-bestsellers',
-            name: 'Amazon Bestsellers',
-            description: 'Scrape Amazon bestseller products across categories',
-            url: 'https://www.amazon.com/bestsellers',
-            enabled: true,
-            supportedFormats: ['json', 'csv'],
-            defaultFormat: 'json',
-            estimatedRecords: 50
-        },
-        {
             id: 'github-most-starred',
             name: 'GitHub Most Starred Repositories',
             description: 'Scrape trending repositories from GitHub',
@@ -38,6 +28,27 @@ class ScrapingService {
             supportedFormats: ['json', 'csv'],
             defaultFormat: 'json',
             estimatedRecords: 25
+        },
+
+        {
+            id: 'turing-remote-jobs',
+            name: 'Turing Remote Jobs',
+            description: 'Scrape remote job listings from Turing.com',
+            url: 'https://turing.com/api/remote-jobs?sortBy=publishedOnJobBoard,desc&limit=1000&offset=0&locale=en',
+            enabled: true,
+            supportedFormats: ['json', 'csv'],
+            defaultFormat: 'json',
+            estimatedRecords: 1000
+        },
+        {
+            id: 'quickbooks-pricing',
+            name: 'QuickBooks Pricing',
+            description: 'Scrape QuickBooks pricing plans and offers',
+            url: 'https://quickbooks.intuit.com/qbmds-data/us/billing_offers_us.json?v4=5',
+            enabled: true,
+            supportedFormats: ['json', 'csv'],
+            defaultFormat: 'json',
+            estimatedRecords: 4
         },
         {
             id: 'news-headlines',
@@ -48,7 +59,17 @@ class ScrapingService {
             supportedFormats: ['json', 'csv', 'xml'],
             defaultFormat: 'json',
             estimatedRecords: 20
-        }
+        },
+        {
+            id: 'amazon-bestsellers',
+            name: 'Amazon Bestsellers',
+            description: 'Scrape Amazon bestseller products across categories',
+            url: 'https://www.amazon.com/bestsellers',
+            enabled: true,
+            supportedFormats: ['json', 'csv'],
+            defaultFormat: 'json',
+            estimatedRecords: 50
+        },
     ];
 
     private scrapingHistory: Array<{
@@ -103,6 +124,12 @@ class ScrapingService {
                 break;
             case 'news-headlines':
                 scrapedData = await this.scrapeNewsHeadlines(request.options);
+                break;
+            case 'turing-remote-jobs':
+                scrapedData = await this.scrapeTuringJobs(request.options);
+                break;
+            case 'quickbooks-pricing':
+                scrapedData = await this.scrapeQuickBooksPricing(request.options);
                 break;
             case 'test':
                 scrapedData = await this.scrapeTestData(request.options);
@@ -214,20 +241,13 @@ class ScrapingService {
 
             // Apply limit if specified
             const limit = options?.limit || marketsData.length;
-            return marketsData.slice(0, limit);
+            console.log(marketsData.length);
+            console.log(limit);
+            return marketsData.slice(0, limit || marketsData.length);
 
         } catch (error) {
             console.error('Error scraping Bullish markets:', error);
-
-            // Fallback to mock data if scraping fails
-            console.log('Falling back to mock data due to scraping error');
-            return [
-                { market: 'BTC/USD', volume24Hrs: '$2,100,000,000', totalMarkets: 150, totalVolume24Hrs: '$5,000,000,000', rank: 1 },
-                { market: 'ETH/USD', volume24Hrs: '$1,800,000,000', totalMarkets: 150, totalVolume24Hrs: '$5,000,000,000', rank: 2 },
-                { market: 'ADA/USD', volume24Hrs: '$500,000,000', totalMarkets: 150, totalVolume24Hrs: '$5,000,000,000', rank: 3 },
-                { market: 'SOL/USD', volume24Hrs: '$800,000,000', totalMarkets: 150, totalVolume24Hrs: '$5,000,000,000', rank: 4 },
-                { market: 'DOT/USD', volume24Hrs: '$300,000,000', totalMarkets: 150, totalVolume24Hrs: '$5,000,000,000', rank: 5 }
-            ].slice(0, options?.limit || 5);
+            return []
         }
     }
 
@@ -252,10 +272,23 @@ class ScrapingService {
      * @returns Mock GitHub most starred data
      */
     private async scrapeGitHubMostStarred(options?: any): Promise<any[]> {
-        const response = await axios.get('https://api.github.com/search/repositories?q=stars%3A%3E1000&o=desc&s=stars');
+        if (!options?.limit || options?.limit > 100) {
+            options.limit = 100;
+        }
+        const response = await axios.get<GitHubMostStarredApiResponse>(`https://api.github.com/search/repositories?q=stars%3A%3E1000&o=desc&s=stars&per_page=${options?.limit}`);
         const data = response.data;
         const repositories = data.items;
-        return repositories.map((repo: any) => ({ name: repo.name, stars: repo.stargazers_count })).slice(0, options?.limit || 5);
+        return repositories.map((repo) => ({
+            id: repo.id,
+            name: repo.name,
+            fullName: repo.full_name,
+            description: repo.description,
+            stars: repo.stargazers_count,
+            url: repo.html_url,
+            language: repo.language,
+            owner: repo.owner.login,
+            topics: repo.topics,
+        }));
     }
 
     /**
@@ -264,6 +297,8 @@ class ScrapingService {
      * @returns Mock news headlines data
      */
     private async scrapeNewsHeadlines(options?: any): Promise<any[]> {
+        // This is a placeholder; real implementation would use NewsApiTopHeadlinesResponse
+        // and fetch from NewsAPI with a valid API key
         return [
             { title: 'Tech Innovation Breakthrough', source: 'TechNews', publishedAt: '2024-01-15T10:00:00Z' },
             { title: 'Market Analysis Report', source: 'FinanceToday', publishedAt: '2024-01-15T09:30:00Z' },
@@ -272,6 +307,142 @@ class ScrapingService {
             { title: 'Health Research Findings', source: 'HealthWeekly', publishedAt: '2024-01-15T06:15:00Z' }
         ].slice(0, options?.limit || 5);
     }
+
+    /**
+     * Scrape remote jobs from Turing.com
+     * @param options - Scraping options
+     * @returns Array of remote jobs
+     */
+    private async scrapeTuringJobs(options?: any): Promise<any[]> {
+        if (!options?.limit || options?.limit > 1000) {
+            options.limit = 1000;
+        }
+        const url = `https://turing.com/api/remote-jobs?sortBy=publishedOnJobBoard,desc&limit=${options?.limit}&offset=0&locale=en`;
+        const response = await axios.get<TuringJob[]>(url, {
+            timeout: options?.timeout || 30000,
+            headers: options?.headers || {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Accept': 'application/json',
+                'Accept-Language': 'en-US,en;q=0.5',
+            }
+        });
+        const jobs = response.data || [];
+        return jobs.map((job: TuringJob) => ({
+            jobId: job.jobId,
+            createdDate: job.createdDate,
+            updatedDate: job.updatedDate,
+            industry: job.industry,
+            customerWeeklyHourEngagement: job.customerWeeklyHourEngagement,
+            publishedOnJobBoard: job.publishedOnJobBoard,
+            // skillsExpression: job.skillsExpression.,
+            // optionalSkills: job.optionalSkills,
+            role: job.role,
+            companySize: job.companySize,
+            publicTitle: job.publicTitle,
+            isActive: job.isActive,
+            // jobLanguageContent: job.jobLanguageContent,
+            showOnJobBoard: job.showOnJobBoard,
+            fulfilmentProbability: job.fulfilmentProbability,
+            directApplyUrl: job.directApplyUrl,
+            // requiredSkills: job.requiredSkills,
+            description: job.description,
+        }))
+    }
+
+
+
+    /**
+     * Scrape QuickBooks pricing data
+     * @param options - Scraping options
+     * @returns Array of QuickBooks pricing plans
+     */
+    private async scrapeQuickBooksPricing(options?: any): Promise<any[]> {
+        try {
+            const response = await axios.get(
+                'https://quickbooks.intuit.com/qbmds-data/us/billing_offers_us.json?v4=5',
+                {
+                    timeout: 30000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                        'Accept': 'application/json',
+                        'Accept-Language': 'en-US,en;q=0.5',
+                        'Accept-Encoding': 'gzip, deflate, br',
+                        'Connection': 'keep-alive'
+                    }
+                }
+            );
+
+            const data = response.data;
+
+            // Parse the QuickBooks pricing data similar to the provided logic
+            const campaigns = data?.campaigns?.default?.default?.QBO;
+            if (!campaigns) {
+                throw new Error('Invalid QuickBooks pricing data structure');
+            }
+
+            // Extract offer IDs for different QuickBooks plans
+            const simpleStartOfferID = campaigns.QBO_SIMPLE_START?.MONTHLY?.PAID?.offer_id;
+            const essentialsOfferID = campaigns.QBO_ESSENTIALS?.MONTHLY?.PAID?.offer_id;
+            const plusOfferID = campaigns.QBO_PLUS?.MONTHLY?.PAID?.offer_id;
+            const advancedOfferID = campaigns.QBO_ADVANCED?.MONTHLY?.PAID?.offer_id;
+
+            const offerIDs = [simpleStartOfferID, essentialsOfferID, plusOfferID, advancedOfferID].filter(Boolean);
+
+            const pricingData: any[] = [];
+
+            for (const offerID of offerIDs) {
+                const offer = data.offerDefinitions?.[offerID];
+                if (!offer) {
+                    console.warn(`Offer not found with ID ${offerID}`);
+                    continue;
+                }
+
+                // Extract plan name from offer name (e.g., "QBO Simple Start US" -> "Simple Start")
+                const offerNameMatch = offer.name?.match(/QBO\s*(.*?)\s*US/);
+                const planName = offerNameMatch?.[1];
+
+                if (!planName) {
+                    console.warn(`Could not extract plan name from offer: ${offer.name}`);
+                    continue;
+                }
+
+                // Validate required fields
+                if (
+                    offer.discountDuration == null ||
+                    offer.discountUnit == null ||
+                    offer.discountPriceWhole == null
+                ) {
+                    console.warn(`Missing required offer info for ${planName}`);
+                    continue;
+                }
+
+                pricingData.push({
+                    plan: planName,
+                    price: Number(offer.basePrice || 0),
+                    discountedPrice: Number(`${offer.discountPriceWhole}.${offer.discountPriceCents || 0}`),
+                    category: planName,
+                    discountDuration: offer.discountDuration.toString(),
+                    discountUnit: offer.discountUnit,
+                    offerName: offer.name,
+                    offerId: offerID
+                });
+            }
+
+            if (pricingData.length === 0) {
+                throw new Error('No QuickBooks pricing data could be extracted');
+            }
+
+            // Apply limit if specified
+            const limit = options?.limit || pricingData.length;
+            return pricingData.slice(0, limit);
+
+        } catch (error) {
+            console.error('Error scraping QuickBooks pricing:', error);
+            throw new Error(`Failed to scrape QuickBooks pricing: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+    }
+
+
 
     /**
      * Scrape test data (for development/testing)

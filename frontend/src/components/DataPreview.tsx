@@ -7,6 +7,8 @@ import React from 'react';
 import { Button } from './ui/Button';
 import { Card, CardContent, CardHeader } from './ui/Card';
 
+const DATA_PREVIEW_LIMIT = 10;
+
 export interface DataPreviewProps {
   data: any;
   format: string;
@@ -36,7 +38,7 @@ const DataPreview: React.FC<DataPreviewProps> = ({
     if (!Array.isArray(data)) return null;
 
     const headers = Object.keys(data[0] || {});
-    const displayData = isExpanded ? data : data.slice(0, 5);
+    const displayData = isExpanded ? data : data.slice(0, DATA_PREVIEW_LIMIT);
 
     return (
       <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
@@ -136,14 +138,15 @@ const DataPreview: React.FC<DataPreviewProps> = ({
             {Array.isArray(data) ? (
               <>
                 {renderTableData()}
-                {data.length > 5 && (
+                {data.length > DATA_PREVIEW_LIMIT && (
                   <div className="mt-6 text-center">
                     <Button
-                      onClick={() => setIsExpanded(!isExpanded)}
-                      className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all duration-300"
+                      onClick={onDownload}
+                      className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-md hover:shadow-lg transition-all duration-300"
                       size="sm"
+                      icon={<Download className="h-4 w-4" />}
                     >
-                      {isExpanded ? 'Show Less' : `Show All ${data.length} Records`}
+                      Download {data.length} Records
                     </Button>
                   </div>
                 )}

@@ -49,16 +49,19 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const handleScrape = async (source: ScrapingSource, format: string) => {
+  const handleScrape = async (source: ScrapingSource, format: string, limit?: number) => {
     try {
       setScrapingLoading(source.id);
       setError(null);
       setSuccess(null);
 
+      const options = (source.id === 'github-most-starred' || source.id === 'turing-remote-jobs')
+        ? { limit: limit || 10 }
+        : { limit: 0 };
       const response: ScrapingResponse = await scrapingApi.scrapeData({
         source: source.id,
         format: format as 'json' | 'csv' | 'xml',
-        options: { limit: 10 }
+        options
       });
 
       if (response.success && response.data) {
@@ -68,7 +71,6 @@ const Dashboard: React.FC = () => {
           data: response.data,
           timestamp: response.metadata.timestamp
         });
-        
         const recordCount = response.metadata.recordCount || 0;
         setSuccess(`Successfully scraped ${recordCount} records from ${source.name} in ${format.toUpperCase()} format!`);
       } else {
@@ -172,7 +174,7 @@ const Dashboard: React.FC = () => {
         )}
 
         {/* Scraping Sources Grid */}
-        <div className="mb-12">
+        <div className="mb-12 mt-12">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl font-bold text-gray-800 mb-2">
