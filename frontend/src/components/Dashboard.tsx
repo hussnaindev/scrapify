@@ -3,10 +3,10 @@
  */
 
 import {
-    Activity,
-    AlertCircle,
-    Database,
-    RefreshCw
+  Activity,
+  AlertCircle,
+  Database,
+  RefreshCw
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { ScrapingResponse, ScrapingSource } from '../types';

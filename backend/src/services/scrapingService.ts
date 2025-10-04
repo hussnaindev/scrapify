@@ -30,10 +30,10 @@ class ScrapingService {
             estimatedRecords: 50
         },
         {
-            id: 'github-trending',
-            name: 'GitHub Trending Repositories',
+            id: 'github-most-starred',
+            name: 'GitHub Most Starred Repositories',
             description: 'Scrape trending repositories from GitHub',
-            url: 'https://github.com/trending',
+            url: 'https://github.com/search/repositories?q=stars%3A%3E1000&o=desc&s=stars',
             enabled: true,
             supportedFormats: ['json', 'csv'],
             defaultFormat: 'json',
@@ -98,8 +98,8 @@ class ScrapingService {
             case 'amazon-bestsellers':
                 scrapedData = await this.scrapeAmazonBestsellers(request.options);
                 break;
-            case 'github-trending':
-                scrapedData = await this.scrapeGitHubTrending(request.options);
+            case 'github-most-starred':
+                scrapedData = await this.scrapeGitHubMostStarred(request.options);
                 break;
             case 'news-headlines':
                 scrapedData = await this.scrapeNewsHeadlines(request.options);
@@ -247,18 +247,15 @@ class ScrapingService {
     }
 
     /**
-     * Scrape GitHub trending repositories (placeholder implementation)
+     * Scrape GitHub most starred repositories (placeholder implementation)
      * @param options - Scraping options
-     * @returns Mock GitHub trending data
+     * @returns Mock GitHub most starred data
      */
-    private async scrapeGitHubTrending(options?: any): Promise<any[]> {
-        return [
-            { name: 'awesome-ai', stars: 15000, language: 'Python', description: 'Curated AI resources' },
-            { name: 'react-dashboard', stars: 8500, language: 'TypeScript', description: 'Modern React dashboard' },
-            { name: 'machine-learning', stars: 12000, language: 'Python', description: 'ML algorithms collection' },
-            { name: 'web-scraper', stars: 3200, language: 'JavaScript', description: 'Universal web scraper' },
-            { name: 'data-visualization', stars: 5600, language: 'D3.js', description: 'Interactive data viz' }
-        ].slice(0, options?.limit || 5);
+    private async scrapeGitHubMostStarred(options?: any): Promise<any[]> {
+        const response = await axios.get('https://api.github.com/search/repositories?q=stars%3A%3E1000&o=desc&s=stars');
+        const data = response.data;
+        const repositories = data.items;
+        return repositories.map((repo: any) => ({ name: repo.name, stars: repo.stargazers_count })).slice(0, options?.limit || 5);
     }
 
     /**
