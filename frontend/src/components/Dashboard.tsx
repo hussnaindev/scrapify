@@ -5,8 +5,7 @@
 import {
   Activity,
   AlertCircle,
-  Database,
-  RefreshCw
+  Database
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { ScrapingResponse, ScrapingSource } from '../types';
@@ -134,14 +133,6 @@ const Dashboard: React.FC = () => {
                 <p className="text-sm text-gray-600 font-medium">Data Scraping Dashboard</p>
               </div>
             </div>
-            <Button
-              onClick={loadSources}
-              className="bg-gradient-to-r from-gray-600 to-slate-700 hover:from-gray-700 hover:to-slate-800 shadow-lg hover:shadow-xl transition-all duration-300"
-              icon={<RefreshCw className="h-4 w-4" />}
-              disabled={loading}
-            >
-              Refresh Sources
-            </Button>
           </div>
         </div>
       </div>

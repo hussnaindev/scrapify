@@ -86,46 +86,49 @@ const DataPreview: React.FC<DataPreviewProps> = ({
 
   return (
     <Card className="mt-8 bg-white/80 backdrop-blur-sm border-2 border-gray-200 shadow-xl">
-      <CardHeader className="bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg">
+           <CardHeader className="bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-200">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center space-x-3 min-w-0 flex-1">
+            <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex-shrink-0">
               <Database className="h-5 w-5 text-white" />
             </div>
-            <div>
-              <h3 className="text-xl font-bold text-gray-800">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-800 truncate">
                 Scraped Data Preview
               </h3>
-              <p className="text-sm text-gray-600">Source: {source}</p>
+              <p className="text-xs sm:text-sm text-gray-600 truncate">Source: {source}</p>
             </div>
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200 shadow-sm">
+            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200 shadow-sm flex-shrink-0">
               {format.toUpperCase()}
             </span>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3 flex-wrap sm:flex-nowrap">
             <Button
               onClick={() => setShowRawData(!showRawData)}
-              className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 shadow-md hover:shadow-lg transition-all duration-300"
+              className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 shadow-md hover:shadow-lg transition-all duration-300 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
               size="sm"
-              icon={showRawData ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              icon={showRawData ? <EyeOff className="h-3 w-3 sm:h-4 sm:w-4" /> : <Eye className="h-3 w-3 sm:h-4 sm:w-4" />}
             >
-              {showRawData ? 'Hide Raw' : 'Show Raw'}
+              <span className="hidden sm:inline">{showRawData ? 'Hide Raw' : 'Show Raw'}</span>
+              <span className="sm:hidden">{showRawData ? 'Hide' : 'Raw'}</span>
             </Button>
             <Button
               onClick={onCopy}
-              className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all duration-300"
+              className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all duration-300 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
               size="sm"
-              icon={<Copy className="h-4 w-4" />}
+              icon={<Copy className="h-3 w-3 sm:h-4 sm:w-4" />}
             >
-              Copy
+              <span className="hidden sm:inline">Copy</span>
+              <span className="sm:hidden">📋</span>
             </Button>
             <Button
               onClick={onDownload}
-              className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-md hover:shadow-lg transition-all duration-300"
+              className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-md hover:shadow-lg transition-all duration-300 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
               size="sm"
-              icon={<Download className="h-4 w-4" />}
+              icon={<Download className="h-3 w-3 sm:h-4 sm:w-4" />}
             >
-              Download
+              <span className="hidden sm:inline">Download</span>
+              <span className="sm:hidden">⬇</span>
             </Button>
           </div>
         </div>

@@ -5,7 +5,6 @@
 
 import { BaseScraper, ScraperConfig } from '../base/BaseScraper';
 import { BullishMarketsScraper } from './BullishMarketsScraper';
-import { EpicGamesTopSellersScraper } from './EpicGamesTopSellers';
 import { GitHubMostStarredScraper } from './GitHubMostStarredScraper';
 import { QuickBooksPricingScraper } from './QuickBooksPricingScraper';
 import { SpotifyMostFollowedScraper } from './SpotifyMostFollowedScraper';
@@ -58,7 +57,6 @@ export class ScraperRegistry {
     static initializeScrapers(): void {
         // Register all available scrapers
         this.register(new BullishMarketsScraper());
-        this.register(new EpicGamesTopSellersScraper());
         this.register(new GitHubMostStarredScraper());
         this.register(new TuringJobsScraper());
         this.register(new QuickBooksPricingScraper());

@@ -101,18 +101,6 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
             }}
           />
         );
-      case 'epic-games-top-sellers':
-        return (
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/3/31/Epic_Games_logo.svg"
-            alt="Epic Games"
-            className={iconClass}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.nextElementSibling?.classList.remove('hidden');
-            }}
-          />
-        );
       case 'spotify-most-followed':
         return (
           <img
