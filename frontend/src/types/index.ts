@@ -141,3 +141,13 @@ export interface SpotifyArtist {
     country: string;
     language: string;
 }
+
+// Epic Games Top Sellers types
+export interface EpicGame {
+    name: string;
+    price: string;
+    discountPercentage: string;
+    discountedPrice: string;
+    link: string;
+    rank?: number;
+}

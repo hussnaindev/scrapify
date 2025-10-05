@@ -14,6 +14,16 @@ export interface ScraperConfig {
     estimatedRecords?: number;
     timeout?: number;
     headers?: Record<string, string>;
+    // Puppeteer-specific options
+    usePuppeteer?: boolean;
+    puppeteerOptions?: {
+        headless?: boolean;
+        args?: string[];
+        viewport?: {
+            width: number;
+            height: number;
+        };
+    };
 }
 
 export interface ScrapingOptions {

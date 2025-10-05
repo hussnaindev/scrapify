@@ -33,7 +33,6 @@ const SCRAPER_CONFIG = {
 };
 
 const WHITE_ICONS = ['bullish-markets', 'turing-remote-jobs'];
-
 export interface ScrapingCardProps {
   source: ScrapingSource;
   onScrape: (source: ScrapingSource, format: string, limit?: number) => Promise<void>;
@@ -96,6 +95,18 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
             src="https://www.turing.com/assets/Turing-Wordmark_White.svg"
             alt="Turing"
             className={whiteIconClass}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling?.classList.remove('hidden');
+            }}
+          />
+        );
+      case 'epic-games-top-sellers':
+        return (
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/3/31/Epic_Games_logo.svg"
+            alt="Epic Games"
+            className={iconClass}
             onError={(e) => {
               e.currentTarget.style.display = 'none';
               e.currentTarget.nextElementSibling?.classList.remove('hidden');
