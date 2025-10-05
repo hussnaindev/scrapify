@@ -208,3 +208,25 @@ export interface NewsApiTopHeadlinesResponse {
     totalResults: number;
     articles: NewsApiArticle[];
 }
+
+export interface NewsApiTopHeadlinesResponse {
+    status: string;
+    totalResults: number;
+    articles: NewsApiArticle[];
+}
+
+// Spotify Most Followed Artists types
+export interface SpotifyArtist {
+    rank: number;
+    position: string;
+    image: string;
+    artist: string;
+    followers: string;
+    dailyChange: string;
+    weeklyChange: string;
+    spotifyId: string;
+    gender: string;
+    genre: string;
+    country: string;
+    language: string;
+}

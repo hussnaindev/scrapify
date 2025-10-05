@@ -9,6 +9,8 @@ import { Button } from './ui/Button';
 import { Card, CardContent, CardFooter, CardHeader } from './ui/Card';
 import { Select } from './ui/Select';
 
+const WHITE_ICONS = ['bullish-markets',  'turing-remote-jobs'];
+
 export interface ScrapingCardProps {
   source: ScrapingSource;
   onScrape: (source: ScrapingSource, format: string, limit?: number) => Promise<void>;
@@ -40,7 +42,7 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
   }));
 
    const getSourceIcon = (sourceId: string) => {
-    const iconClass = "h-12 w-12 object-contain";
+    const iconClass = "h-16 w-16 object-contain";
 
     switch (sourceId) {
       case 'bullish-markets':
@@ -104,6 +106,19 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
             }}
           />
         );
+
+      case 'spotify-most-followed':
+        return (
+          <img
+            src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Black.png"
+            alt="Spotify"
+            className={iconClass}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling?.classList.remove('hidden');
+            }}
+          />
+        );
       case 'quickbooks-pricing':
         return (
           <img
@@ -138,58 +153,22 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
       case 'amazon-bestsellers':
         return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200 shadow-sm whitespace-nowrap">Mock Data</span>;
       case 'github-most-starred':
-        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200 shadow-sm whitespace-nowrap">Live Data</span>;
+        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm whitespace-nowrap">Live Data</span>;
       case 'news-headlines':
         return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm whitespace-nowrap">Mock Data</span>;
       case 'turing-remote-jobs':
-        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200 shadow-sm whitespace-nowrap">Live Data</span>;
+        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm whitespace-nowrap">Live Data</span>;
       case 'quickbooks-pricing':
-        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200 shadow-sm whitespace-nowrap">Live Data</span>;
+        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm whitespace-nowrap">Live Data</span>;
       default:
         return null;
     }
   };
 
-  const getCardGradient = (sourceId: string) => {
-    switch (sourceId) {
-      case 'bullish-markets':
-        return 'from-emerald-50 to-green-50 border-emerald-200';
-      case 'amazon-bestsellers':
-        return 'from-amber-50 to-orange-50 border-amber-200';
-      case 'github-most-starred':
-        return 'from-blue-50 to-indigo-50 border-blue-200';
-      case 'news-headlines':
-        return 'from-red-50 to-pink-50 border-red-200';
-      case 'turing-remote-jobs':
-        return 'from-purple-50 to-indigo-50 border-purple-200';
-      case 'quickbooks-pricing':
-        return 'from-emerald-50 to-green-50 border-emerald-200';
-      default:
-        return 'from-gray-50 to-slate-50 border-gray-200';
-    }
-  };
 
-  const getIconBg = (sourceId: string) => {
-    switch (sourceId) {
-      case 'bullish-markets':
-        return 'bg-gradient-to-br from-emerald-500 to-green-600';
-      case 'quickbooks-pricing':
-        return 'bg-gradient-to-br from-green-200 to-emerald-100';
-      case 'turing-remote-jobs':
-        return 'bg-gradient-to-br from-gray-500 to-gray-800';
-      case 'amazon-bestsellers':
-        return 'bg-gradient-to-br from-amber-500 to-orange-600';
-      case 'github-most-starred':
-        return 'bg-gradient-to-br from-blue-500 to-indigo-600';
-      case 'news-headlines':
-        return 'bg-gradient-to-br from-red-500 to-pink-600';
-      default:
-        return 'bg-gradient-to-br from-gray-500 to-slate-600';
-    }
-  };
 
   return (
-    <Card className={`h-full flex flex-col bg-gradient-to-br ${getCardGradient(source.id)} border-2 hover:shadow-xl hover:scale-105 transition-all duration-300 group min-h-[400px] max-h-[500px] overflow-hidden`}>
+    <Card className={`h-full flex flex-col bg-gradient-to-br  return from-gray-50 to-slate-50 border-gray-200 border-2 hover:shadow-xl hover:scale-105 transition-all duration-300 group min-h-[400px] max-h-[500px] overflow-hidden`}>
       <CardHeader className="pb-4 px-6 relative pt-12">
         {/* Badge positioned in top-right corner */}
         <div className="absolute top-3 right-4 z-10">
@@ -198,7 +177,7 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
 
         <div className="flex items-start gap-2">
           <div className="flex items-center space-x-4 flex-1 min-w-0">
-            <div className={`p-3 rounded-xl ${getIconBg(source.id)} shadow-lg group-hover:shadow-xl transition-shadow duration-300 flex-shrink-0`}>
+            <div className={`p-2 transition-shadow duration-300 flex-shrink-0 ${WHITE_ICONS.includes(source.id) ? "bg-black rounded-xl" : ""}`}>
               {getSourceIcon(source.id)}
             </div>
             <div className="flex-1 min-w-0">
