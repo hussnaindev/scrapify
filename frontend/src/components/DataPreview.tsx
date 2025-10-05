@@ -24,8 +24,7 @@ const DataPreview: React.FC<DataPreviewProps> = ({
   onDownload, 
   onCopy 
 }) => {
-  const [isExpanded, setIsExpanded] = React.useState(false);
-  const [showRawData, setShowRawData] = React.useState(false);
+ const [showRawData, setShowRawData] = React.useState(false);
 
   const formatDataForDisplay = (data: any) => {
     if (format === 'json') {
@@ -38,7 +37,7 @@ const DataPreview: React.FC<DataPreviewProps> = ({
     if (!Array.isArray(data)) return null;
 
     const headers = Object.keys(data[0] || {});
-    const displayData = isExpanded ? data : data.slice(0, DATA_PREVIEW_LIMIT);
+    const displayData = data.slice(0, DATA_PREVIEW_LIMIT);
 
     return (
       <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
