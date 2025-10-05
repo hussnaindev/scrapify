@@ -1,5 +1,6 @@
 /**
- * ScrapingCard component - displays individual scraping source cards
+ * ScrapingCard component - Updated for scalability
+ * Now uses configuration-driven approach for better maintainability
  */
 
 import { Download } from 'lucide-react';
@@ -9,7 +10,29 @@ import { Button } from './ui/Button';
 import { Card, CardContent, CardFooter, CardHeader } from './ui/Card';
 import { Select } from './ui/Select';
 
-const WHITE_ICONS = ['bullish-markets',  'turing-remote-jobs'];
+// Configuration for special handling of different scrapers
+const SCRAPER_CONFIG = {
+  'github-most-starred': {
+    defaultLimit: 10,
+    limitOptions: [
+      { value: '10', label: '10' },
+      { value: '50', label: '50' },
+      { value: '100', label: '100' },
+    ],
+    limitLabel: 'Repos'
+  },
+  'turing-remote-jobs': {
+    defaultLimit: 100,
+    limitOptions: [
+      { value: '100', label: '100' },
+      { value: '500', label: '500' },
+      { value: '1000', label: '1000' },
+    ],
+    limitLabel: 'Jobs'
+  }
+};
+
+const WHITE_ICONS = ['bullish-markets', 'turing-remote-jobs'];
 
 export interface ScrapingCardProps {
   source: ScrapingSource;
@@ -23,17 +46,14 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
   isLoading = false 
 }) => {
   const [selectedFormat, setSelectedFormat] = useState(source.defaultFormat);
-  const [repoLimit, setRepoLimit] = useState(10);
-  const [jobsLimit, setJobsLimit] = useState(100);
+  const [selectedLimit, setSelectedLimit] = useState<number>(
+    SCRAPER_CONFIG[source.id as keyof typeof SCRAPER_CONFIG]?.defaultLimit || 0
+  );
 
   const handleScrape = async () => {
-    if (source.id === 'github-most-starred') {
-      await onScrape(source, selectedFormat, repoLimit);
-    } else if (source.id === 'turing-remote-jobs') {
-      await onScrape(source, selectedFormat, jobsLimit);
-    } else {
-      await onScrape(source, selectedFormat);
-    }
+    const config = SCRAPER_CONFIG[source.id as keyof typeof SCRAPER_CONFIG];
+    const limit = config ? selectedLimit : undefined;
+    await onScrape(source, selectedFormat, limit);
   };
 
   const formatOptions = source.supportedFormats.map(format => ({
@@ -41,8 +61,9 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
     label: format.toUpperCase(),
   }));
 
-   const getSourceIcon = (sourceId: string) => {
+  const getSourceIcon = (sourceId: string) => {
     const iconClass = "h-16 w-16 object-contain";
+    const whiteIconClass = `${iconClass} ${WHITE_ICONS.includes(sourceId) ? "bg-black rounded-xl p-2" : ""}`;
 
     switch (sourceId) {
       case 'bullish-markets':
@@ -50,20 +71,7 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
           <img
             src="https://cdn.prod.website-files.com/67e428d18ac85216b5a9d0e4/67f949a57fa08489a0c7843a_Bullish-Logo.svg"
             alt="Bullish"
-            className={iconClass}
-            onError={(e) => {
-              // Fallback to a simple icon if image fails to load
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.nextElementSibling?.classList.remove('hidden');
-            }}
-          />
-        );
-      case 'amazon-bestsellers':
-        return (
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png"
-            alt="Amazon"
-            className={iconClass}
+            className={whiteIconClass}
             onError={(e) => {
               e.currentTarget.style.display = 'none';
               e.currentTarget.nextElementSibling?.classList.remove('hidden');
@@ -82,31 +90,18 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
             }}
           />
         );
-      case 'news-headlines':
-        return (
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/2965/2965879.png"
-            alt="News"
-            className={iconClass}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.nextElementSibling?.classList.remove('hidden');
-            }}
-          />
-        );
       case 'turing-remote-jobs':
         return (
           <img
             src="https://www.turing.com/assets/Turing-Wordmark_White.svg"
             alt="Turing"
-            className={iconClass}
+            className={whiteIconClass}
             onError={(e) => {
               e.currentTarget.style.display = 'none';
               e.currentTarget.nextElementSibling?.classList.remove('hidden');
             }}
           />
         );
-
       case 'spotify-most-followed':
         return (
           <img
@@ -147,37 +142,53 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
   };
 
   const getSourceBadge = (sourceId: string) => {
-    switch (sourceId) {
-      case 'bullish-markets':
-        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm whitespace-nowrap">Live Data</span>;
-      case 'amazon-bestsellers':
-        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200 shadow-sm whitespace-nowrap">Mock Data</span>;
-      case 'github-most-starred':
-        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm whitespace-nowrap">Live Data</span>;
-      case 'news-headlines':
-        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm whitespace-nowrap">Mock Data</span>;
-      case 'turing-remote-jobs':
-        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm whitespace-nowrap">Live Data</span>;
-      case 'quickbooks-pricing':
-        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm whitespace-nowrap">Live Data</span>;
-      default:
-        return null;
-    }
+    const badgeConfig = {
+      'bullish-markets': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
+      'github-most-starred': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
+      'turing-remote-jobs': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
+      'quickbooks-pricing': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
+      'spotify-most-followed': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
+    };
+
+    const config = badgeConfig[sourceId as keyof typeof badgeConfig];
+    
+    return config ? (
+      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${config.className} shadow-sm whitespace-nowrap`}>
+        {config.text}
+      </span>
+    ) : null;
   };
 
+  const renderLimitSelector = () => {
+    const config = SCRAPER_CONFIG[source.id as keyof typeof SCRAPER_CONFIG];
+    if (!config) return null;
 
+    return (
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          {config.limitLabel}
+        </label>
+        <Select
+          options={config.limitOptions}
+          value={selectedLimit.toString()}
+          onChange={(e) => setSelectedLimit(Number(e.target.value))}
+          disabled={isLoading}
+          className="bg-white/80 border-gray-300 focus:border-gray-400 focus:ring-gray-400 w-full"
+        />
+      </div>
+    );
+  };
 
   return (
-    <Card className={`h-full flex flex-col bg-gradient-to-br  return from-gray-50 to-slate-50 border-gray-200 border-2 hover:shadow-xl hover:scale-105 transition-all duration-300 group min-h-[400px] max-h-[500px] overflow-hidden`}>
+    <Card className={`h-full flex flex-col bg-gradient-to-br from-gray-50 to-slate-50 border-gray-200 border-2 hover:shadow-xl hover:scale-105 transition-all duration-300 group min-h-[400px] max-h-[500px] overflow-hidden`}>
       <CardHeader className="pb-4 px-6 relative pt-12">
-        {/* Badge positioned in top-right corner */}
         <div className="absolute top-3 right-4 z-10">
           {getSourceBadge(source.id)}
         </div>
 
         <div className="flex items-start gap-2">
           <div className="flex items-center space-x-4 flex-1 min-w-0">
-            <div className={`p-2 transition-shadow duration-300 flex-shrink-0 ${WHITE_ICONS.includes(source.id) ? "bg-black rounded-xl" : ""}`}>
+            <div className="flex-shrink-0">
               {getSourceIcon(source.id)}
             </div>
             <div className="flex-1 min-w-0">
@@ -209,44 +220,9 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
               className="bg-white/80 border-gray-300 focus:border-gray-400 focus:ring-gray-400 w-full"
             />
           </div>
-          {/* Repo Limit Selection for GitHub Most Starred */}
-          {source.id === 'github-most-starred' && (
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Repos
-              </label>
-              <Select
-                options={[
-                  { value: '10', label: '10' },
-                  { value: '50', label: '50' },
-                  { value: '100', label: '100' },
-                ]}
-                value={repoLimit.toString()}
-                onChange={(e) => setRepoLimit(Number(e.target.value))}
-                disabled={isLoading}
-                className="bg-white/80 border-gray-300 focus:border-gray-400 focus:ring-gray-400 w-full"
-              />
-            </div>
-          )}
-          {/* Jobs Limit Selection for Turing Remote Jobs */}
-          {source.id === 'turing-remote-jobs' && (
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Jobs
-              </label>
-              <Select
-                options={[
-                  { value: '100', label: '100' },
-                  { value: '500', label: '500' },
-                  { value: '1000', label: '1000' },
-                ]}
-                value={jobsLimit.toString()}
-                onChange={(e) => setJobsLimit(Number(e.target.value))}
-                disabled={isLoading}
-                className="bg-white/80 border-gray-300 focus:border-gray-400 focus:ring-gray-400 w-full"
-              />
-            </div>
-          )}
+
+          {/* Dynamic Limit Selection */}
+          {renderLimitSelector()}
         </div>
       </CardContent>
 
@@ -255,9 +231,7 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
           onClick={handleScrape}
           disabled={isLoading}
           loading={isLoading}
-          className={`w-full py-3 text-sm font-semibold transition-all duration-300 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-lg hover:shadow-xl' 
-             
-          }`}
+          className={`w-full py-3 text-sm font-semibold transition-all duration-300 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-lg hover:shadow-xl`}
           icon={<Download className="h-4 w-4" />}
         >
           {isLoading ? 'Scraping...' : 'Scrape Data'}
