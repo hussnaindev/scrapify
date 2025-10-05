@@ -51,26 +51,6 @@ class ScrapingService {
             estimatedRecords: 4
         },
         {
-            id: 'news-headlines',
-            name: 'Latest News Headlines',
-            description: 'Scrape latest news headlines from major sources',
-            url: 'https://newsapi.org/v2/top-headlines',
-            enabled: true,
-            supportedFormats: ['json', 'csv', 'xml'],
-            defaultFormat: 'json',
-            estimatedRecords: 20
-        },
-        {
-            id: 'amazon-bestsellers',
-            name: 'Amazon Bestsellers',
-            description: 'Scrape Amazon bestseller products across categories',
-            url: 'https://www.amazon.com/bestsellers',
-            enabled: true,
-            supportedFormats: ['json', 'csv'],
-            defaultFormat: 'json',
-            estimatedRecords: 50
-        },
-        {
             id: 'spotify-most-followed',
             name: 'Spotify Most Followed Artists',
             description: 'Scrape most followed artists from Spotify data via ChartMasters',
@@ -126,14 +106,8 @@ class ScrapingService {
             case 'bullish-markets':
                 scrapedData = await this.scrapeBullishMarkets(request.options);
                 break;
-            case 'amazon-bestsellers':
-                scrapedData = await this.scrapeAmazonBestsellers(request.options);
-                break;
             case 'github-most-starred':
                 scrapedData = await this.scrapeGitHubMostStarred(request.options);
-                break;
-            case 'news-headlines':
-                scrapedData = await this.scrapeNewsHeadlines(request.options);
                 break;
             case 'turing-remote-jobs':
                 scrapedData = await this.scrapeTuringJobs(request.options);
@@ -265,21 +239,6 @@ class ScrapingService {
     }
 
     /**
-     * Scrape Amazon bestsellers data (placeholder implementation)
-     * @param options - Scraping options
-     * @returns Mock Amazon bestsellers data
-     */
-    private async scrapeAmazonBestsellers(options?: any): Promise<any[]> {
-        return [
-            { title: 'Wireless Headphones', price: '$29.99', rating: 4.5, category: 'Electronics' },
-            { title: 'Coffee Maker', price: '$89.99', rating: 4.2, category: 'Kitchen' },
-            { title: 'Yoga Mat', price: '$24.99', rating: 4.7, category: 'Sports' },
-            { title: 'Bluetooth Speaker', price: '$39.99', rating: 4.3, category: 'Electronics' },
-            { title: 'Water Bottle', price: '$19.99', rating: 4.6, category: 'Sports' }
-        ].slice(0, options?.limit || 5);
-    }
-
-    /**
      * Scrape GitHub most starred repositories (placeholder implementation)
      * @param options - Scraping options
      * @returns Mock GitHub most starred data
@@ -304,22 +263,6 @@ class ScrapingService {
         }));
     }
 
-    /**
-     * Scrape news headlines (placeholder implementation)
-     * @param options - Scraping options
-     * @returns Mock news headlines data
-     */
-    private async scrapeNewsHeadlines(options?: any): Promise<any[]> {
-        // This is a placeholder; real implementation would use NewsApiTopHeadlinesResponse
-        // and fetch from NewsAPI with a valid API key
-        return [
-            { title: 'Tech Innovation Breakthrough', source: 'TechNews', publishedAt: '2024-01-15T10:00:00Z' },
-            { title: 'Market Analysis Report', source: 'FinanceToday', publishedAt: '2024-01-15T09:30:00Z' },
-            { title: 'Climate Change Update', source: 'EcoNews', publishedAt: '2024-01-15T08:45:00Z' },
-            { title: 'Sports Championship Results', source: 'SportsDaily', publishedAt: '2024-01-15T07:20:00Z' },
-            { title: 'Health Research Findings', source: 'HealthWeekly', publishedAt: '2024-01-15T06:15:00Z' }
-        ].slice(0, options?.limit || 5);
-    }
 
     /**
      * Scrape remote jobs from Turing.com

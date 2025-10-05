@@ -255,10 +255,8 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
           onClick={handleScrape}
           disabled={isLoading}
           loading={isLoading}
-          className={`w-full py-3 text-sm font-semibold transition-all duration-300 ${
-            source.id === 'bullish-markets' || source.id === 'github-most-starred' || source.id === 'quickbooks-pricing' || source.id === 'turing-remote-jobs'
-              ? 'bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-lg hover:shadow-xl' 
-              : 'bg-gradient-to-r from-gray-600 to-slate-700 hover:from-gray-700 hover:to-slate-800 shadow-lg hover:shadow-xl'
+          className={`w-full py-3 text-sm font-semibold transition-all duration-300 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-lg hover:shadow-xl' 
+             
           }`}
           icon={<Download className="h-4 w-4" />}
         >
