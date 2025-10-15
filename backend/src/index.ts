@@ -11,7 +11,7 @@ import morgan from 'morgan';
 import { errorHandler } from './middleware/errorHandler';
 import { rateLimiter } from './middleware/rateLimiter';
 import healthRoutes from './routes/health';
-import scrapingRoutes from './routes/scraping';
+import { scrapingService } from './services/scrapingService';
 
 // Load environment variables
 dotenv.config();
@@ -44,7 +44,23 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Routes
 app.use('/api/health', healthRoutes);
-app.use('/api/scraping', scrapingRoutes);
+// app.use('/api/scraping', scrapingRoutes);
+
+
+/**
+ * Get available scraping sources
+ * @route GET /api/scraping/sources
+ * @returns List of available scraping sources
+ */
+app.get('/api/scraping/sources', async (req, res) => {
+    const sources = await scrapingService.getAvailableSources();
+    res.json({
+        success: true,
+        data: sources,
+        message: 'Scraping sources retrieved successfully',
+        timestamp: new Date().toISOString()
+    });
+});
 
 // Root endpoint
 app.get('/', (req, res) => {
