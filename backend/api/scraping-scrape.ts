@@ -20,7 +20,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         const result = await scrapingService.scrapeData(scrapingRequest);
 
-        res.json({
+        return res.json({
             success: true,
             data: result.data,
             metadata: {
@@ -32,7 +32,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             }
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             error: error instanceof Error ? error.message : 'Unknown error occurred',
             metadata: {

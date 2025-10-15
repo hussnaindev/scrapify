@@ -8,14 +8,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     try {
         const sources = await scrapingService.getAvailableSources();
-        res.json({
+        return res.json({
             success: true,
             data: sources,
             message: 'Scraping sources retrieved successfully',
             timestamp: new Date().toISOString()
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             error: 'Internal server error',
             message: error instanceof Error ? error.message : 'Unknown error'
