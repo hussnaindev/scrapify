@@ -26,7 +26,7 @@ app.use(helmet());
 app.use(cors({
     origin: [
         process.env.FRONTEND_URL || 'http://localhost:3000',
-        "https://scrapify-backend.vercel.app"
+        "https://scrapify-omega.vercel.app"
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
