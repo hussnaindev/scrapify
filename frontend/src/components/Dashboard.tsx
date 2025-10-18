@@ -2,7 +2,7 @@
  * Dashboard component - main dashboard layout with scraping cards
  */
 
-import * as FullStory from '@fullstory/browser';
+import { FullStory } from '@fullstory/browser';
 import {
   Activity,
   AlertCircle,
@@ -37,10 +37,13 @@ const Dashboard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Track a custom event
-    FullStory.event('Dashboard Viewed', {
-      timestamp: new Date().toISOString()
-    });
+    // Track a custom event in FS
+
+
+    FullStory('trackEvent', {
+    name: 'Dashboard_Visited',
+    properties: {}
+    })
   }, []);
 
   const loadSources = async () => {
