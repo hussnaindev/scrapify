@@ -11,6 +11,7 @@
         "lint:fix": "eslint . --ext ts,tsx --fix"
     },
     "dependencies": {
+        "@fullstory/browser": "^2.0.6",
         "axios": "^1.6.2",
         "clsx": "^2.0.0",
         "lucide-react": "^0.294.0",
