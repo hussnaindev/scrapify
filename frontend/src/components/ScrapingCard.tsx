@@ -29,6 +29,15 @@ const SCRAPER_CONFIG = {
       { value: '1000', label: '1000' },
     ],
     limitLabel: 'Jobs'
+  },
+  'steam-top-sellers': {
+    defaultLimit: 50,
+    limitOptions: [
+      { value: '10', label: '10' },
+      { value: '25', label: '25' },
+      { value: '50', label: '50' },
+    ],
+    limitLabel: 'Games'
   }
 };
 
@@ -125,6 +134,18 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
             }}
           />
         );
+      case 'steam-top-sellers':
+        return (
+          <img
+            src="https://static.wikia.nocookie.net/steam/images/e/e6/Site-logo.png"
+            alt="Steam"
+            className={iconClass}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling?.classList.remove('hidden');
+            }}
+          />
+        );
       default:
         return (
           <img
@@ -147,6 +168,7 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
       'turing-remote-jobs': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
       'quickbooks-pricing': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
       'spotify-most-followed': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
+      'steam-top-sellers': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
     };
 
     const config = badgeConfig[sourceId as keyof typeof badgeConfig];

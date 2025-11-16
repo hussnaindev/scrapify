@@ -8,6 +8,7 @@ import { BullishMarketsScraper } from './BullishMarketsScraper';
 import { GitHubMostStarredScraper } from './GitHubMostStarredScraper';
 import { QuickBooksPricingScraper } from './QuickBooksPricingScraper';
 import { SpotifyMostFollowedScraper } from './SpotifyMostFollowedScraper';
+import { SteamTopSellersScraper } from './SteamTopSellersScraper';
 import { TuringJobsScraper } from './TuringJobsScraper';
 
 export class ScraperRegistry {
@@ -61,6 +62,7 @@ export class ScraperRegistry {
         this.register(new TuringJobsScraper());
         this.register(new QuickBooksPricingScraper());
         this.register(new SpotifyMostFollowedScraper());
+        this.register(new SteamTopSellersScraper());
     }
 
     /**
