@@ -231,11 +231,7 @@ const Dashboard: React.FC = () => {
 
         {/* Footer */}
         <div className="text-center py-8">
-          <div className="inline-flex items-center space-x-2 text-sm text-gray-500 bg-white/60 px-6 py-3 rounded-full border border-gray-200">
-            <span className="font-medium">Scrapify Dashboard v1.0.0</span>
-            <span className="text-gray-400">•</span>
-            <span>Built with React & Node.js</span>
-          </div>
+  
         </div>
       </div>
     </div>
