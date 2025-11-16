@@ -51,7 +51,12 @@ const Dashboard: React.FC = () => {
       setLoading(true);
       setError(null);
       const sourcesData = await scrapingApi.getSources();
-      setSources(sourcesData);
+      // Filter out scrapers that are not working on production
+      // TODO: Fix these scrapers and re-enable them
+      const filteredSources = sourcesData.filter(
+        (source) => source.id !== 'spotify-most-followed' && source.id !== 'quickbooks-pricing'
+      );
+      setSources(filteredSources);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load scraping sources');
     } finally {

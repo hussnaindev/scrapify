@@ -110,30 +110,31 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
             }}
           />
         );
-      case 'spotify-most-followed':
-        return (
-          <img
-            src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Black.png"
-            alt="Spotify"
-            className={iconClass}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.nextElementSibling?.classList.remove('hidden');
-            }}
-          />
-        );
-      case 'quickbooks-pricing':
-        return (
-          <img
-            src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 36 36'%3e%3cpath fill='%232CA01C' d='M18 36c9.9411 0 18-8.0589 18-18 0-9.94114-8.0589-18-18-18C8.05886 0 0 8.05886 0 18c0 9.9411 8.05886 18 18 18Z'/%3e%3cpath fill='white' d='M12.0002 11c-3.86797 0-6.99996 3.136-6.99996 7 0 3.868 3.13199 7 6.99996 7h1.0001v-2.6h-1.0001c-2.42798 0-4.39995-1.972-4.39995-4.4 0-2.428 1.97197-4.4 4.39995-4.4h2.4041v13.6c0 1.436 1.1639 2.6 2.5999 2.6V11h-5.004ZM24.0038 25c3.868 0 6.9999-3.1361 6.9999-7 0-3.868-3.1319-7-6.9999-7h-1.0001v2.5999h1.0001c2.428 0 4.3999 1.9721 4.3999 4.4001s-1.9719 4.3999-4.3999 4.3999h-2.4041V8.79997c0-1.43602-1.1639-2.60002-2.5999-2.60002V25h5.004Z'/%3e%3c/svg%3e"
-            alt="QuickBooks"
-            className={iconClass}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.nextElementSibling?.classList.remove('hidden');
-            }}
-          />
-        );
+      // Not working on production - hidden from frontend
+      // case 'spotify-most-followed':
+      //   return (
+      //     <img
+      //       src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Black.png"
+      //       alt="Spotify"
+      //       className={iconClass}
+      //       onError={(e) => {
+      //         e.currentTarget.style.display = 'none';
+      //         e.currentTarget.nextElementSibling?.classList.remove('hidden');
+      //       }}
+      //     />
+      //   );
+      // case 'quickbooks-pricing':
+      //   return (
+      //     <img
+      //       src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 36 36'%3e%3cpath fill='%232CA01C' d='M18 36c9.9411 0 18-8.0589 18-18 0-9.94114-8.0589-18-18-18C8.05886 0 0 8.05886 0 18c0 9.9411 8.05886 18 18 18Z'/%3e%3cpath fill='white' d='M12.0002 11c-3.86797 0-6.99996 3.136-6.99996 7 0 3.868 3.13199 7 6.99996 7h1.0001v-2.6h-1.0001c-2.42798 0-4.39995-1.972-4.39995-4.4 0-2.428 1.97197-4.4 4.39995-4.4h2.4041v13.6c0 1.436 1.1639 2.6 2.5999 2.6V11h-5.004ZM24.0038 25c3.868 0 6.9999-3.1361 6.9999-7 0-3.868-3.1319-7-6.9999-7h-1.0001v2.5999h1.0001c2.428 0 4.3999 1.9721 4.3999 4.4001s-1.9719 4.3999-4.3999 4.3999h-2.4041V8.79997c0-1.43602-1.1639-2.60002-2.5999-2.60002V25h5.004Z'/%3e%3c/svg%3e"
+      //       alt="QuickBooks"
+      //       className={iconClass}
+      //       onError={(e) => {
+      //         e.currentTarget.style.display = 'none';
+      //         e.currentTarget.nextElementSibling?.classList.remove('hidden');
+      //       }}
+      //     />
+      //   );
       case 'steam-top-sellers':
         return (
           <img
@@ -166,8 +167,9 @@ const ScrapingCard: React.FC<ScrapingCardProps> = ({
       'bullish-markets': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
       'github-most-starred': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
       'turing-remote-jobs': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
-      'quickbooks-pricing': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
-      'spotify-most-followed': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
+      // Not working on production - hidden from frontend
+      // 'quickbooks-pricing': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
+      // 'spotify-most-followed': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
       'steam-top-sellers': { text: 'Live Data', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
     };
 
