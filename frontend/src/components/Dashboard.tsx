@@ -5,13 +5,13 @@
 import { FullStory } from '@fullstory/browser';
 import {
   Activity,
-  AlertCircle,
-  Database
+  AlertCircle
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { ScrapingResponse, ScrapingSource } from '../types';
 import { copyToClipboard, downloadData, scrapingApi } from '../utils/api';
 import DataPreview from './DataPreview';
+import Logo from './Logo';
 import ScrapingCard from './ScrapingCard';
 import { Alert } from './ui/Alert';
 import { Button } from './ui/Button';
@@ -139,15 +139,8 @@ const Dashboard: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-4">
-              <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
-                <Database className="h-8 w-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-                  Scrapify
-                </h1>
-                <p className="text-sm text-gray-600 font-medium">Data Scraping Dashboard</p>
-              </div>
+              <Logo size="xl" />
+   
             </div>
           </div>
         </div>
